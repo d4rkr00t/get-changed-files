@@ -62,14 +62,14 @@ async function getChangedFiles(
     changed = changed.concat(await getCachedChangedSince({ commit }));
   }
 
-  const uncommited = (await getUncommitedChanged()).concat(
+  const uncommitted = (await getUncommitedChanged()).concat(
     await getUncommitedCachedChanged()
   );
   const untracked = await getUntrackedChanged();
 
-  changed = changed.concat(uncommited).concat(untracked);
+  changed = changed.concat(uncommitted).concat(untracked);
 
-  return { changed, uncommited, untracked };
+  return { changed, uncommitted, untracked };
 }
 
 module.exports = {

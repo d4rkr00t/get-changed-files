@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Get a list of changed files",
   "main": "index.js",
+  "bin": { "get-chaned": "./cli.js" },
   "engines": {
     "node": ">=8"
   },

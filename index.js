@@ -16,5 +16,3 @@ async function getChanged({
 }
 
 module.exports = getChanged;
-
-getChanged().then(console.log);
