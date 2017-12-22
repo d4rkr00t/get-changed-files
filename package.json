@@ -7,13 +7,20 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": ""
+    "test": "echo 'test'",
+    "lint:flow": "flow check"
   },
   "keywords": ["git", "changed", "diff", "changes", "files"],
   "author": "Stanislav Sysoev <@d4rkr00t>",
   "license": "MIT",
   "devDependencies": {
     "flow-bin": "^0.61.0",
-    "jest": "^22.0.4"
+    "jest": "^22.0.4",
+    "lint-staged": "^6.0.0",
+    "pre-commit": "^1.2.2"
+  },
+  "pre-commit": ["lint:flow", "test"],
+  "lint-staged": {
+    "*.js": ["prettier --write", "git add"]
   }
 }
