@@ -7,15 +7,9 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": ""
   },
-  "keywords": [
-    "git",
-    "changed",
-    "diff",
-    "changes",
-    "files"
-  ],
+  "keywords": ["git", "changed", "diff", "changes", "files"],
   "author": "Stanislav Sysoev <@d4rkr00t>",
   "license": "MIT",
   "devDependencies": {
