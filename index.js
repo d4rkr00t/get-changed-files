@@ -2,7 +2,10 @@
 
 const git = require("./git");
 
-async function getChanged({ mainBranch = "master", customGetDiffPoint } = {}) {
+async function getChanged({
+  mainBranch = "master",
+  customGetDiffPoint
+} /*: { mainBranch: string, customGetDiffPoint?: Function } */ = {}) {
   const provider = git;
 
   const getDiffPoint = customGetDiffPoint || provider.getDiffPoint;
@@ -13,3 +16,5 @@ async function getChanged({ mainBranch = "master", customGetDiffPoint } = {}) {
 }
 
 module.exports = getChanged;
+
+getChanged().then(console.log);
