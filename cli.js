@@ -13,23 +13,18 @@ function handleError(e) {
 
 function prettyPrintResults(results, names) {
   if (names) {
-    return Object.keys(results)
-      .reduce((acc, key) => {
-        acc = acc.concat(results[key]);
-        return acc;
-      }, [])
-      .join("\n");
+    return results.changed.join("\n");
   }
 
   return `
-${chalk.yellow("changed:")}
-  ${results.changed.join("\n  ") || "[]"}
+  ${chalk.yellow("changed:")}
+    ${results.changed.join("\n    ") || "[]"}
 
-${chalk.yellow("uncommitted:")}
-  ${results.uncommitted.join("\n  ") || "[]"}
+  ${chalk.yellow("uncommitted:")}
+    ${results.uncommitted.join("\n    ") || "[]"}
 
-${chalk.yellow("untracked:")}
-  ${results.untracked.join("\n  ") || "[]"}
+  ${chalk.yellow("untracked:")}
+    ${results.untracked.join("\n    ") || "[]"}
 `;
 }
 
@@ -39,15 +34,15 @@ function prettyPrintResultsSubset(name, subset, names) {
   }
 
   return `
-${chalk.yellow(name)}:
-  ${subset.join("\n  ") || "[]"}
+  ${chalk.yellow(name)}:
+    ${subset.join("\n    ") || "[]"}
 `;
 }
 
 function printTime(time) {
   const NS_PER_SEC = 1e9;
   const ms = (time[0] * NS_PER_SEC + time[1]) / 1e6;
-  return chalk.green(`⏱  Done in ${ms}ms`);
+  return chalk.green(`  ⏱  Done in ${ms}ms`);
 }
 
 const startTime = process.hrtime();
