@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Get a list of changed files",
   "main": "index.js",
-  "bin": { "get-chaned": "./cli.js" },
+  "bin": {
+    "get-chaned": "./cli.js"
+  },
   "engines": {
     "node": ">=8"
   },
@@ -11,7 +13,13 @@
     "test": "echo 'test'",
     "lint:flow": "flow check"
   },
-  "keywords": ["git", "changed", "diff", "changes", "files"],
+  "keywords": [
+    "git",
+    "changed",
+    "diff",
+    "changes",
+    "files"
+  ],
   "author": "Stanislav Sysoev <@d4rkr00t>",
   "license": "MIT",
   "devDependencies": {
@@ -20,8 +28,18 @@
     "lint-staged": "^6.0.0",
     "pre-commit": "^1.2.2"
   },
-  "pre-commit": ["lint:flow", "test"],
+  "pre-commit": [
+    "lint:flow",
+    "test"
+  ],
   "lint-staged": {
-    "*.js": ["prettier --write", "git add"]
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "meow": "^4.0.0"
   }
 }

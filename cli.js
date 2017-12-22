@@ -1,50 +1,112 @@
 #!/usr/bin/env node
 /* @flow */
 
+const meow = require("meow");
+const chalk = require("chalk");
 const getChanged = require("./index");
 const argv = process.argv.slice(2) || [];
 
 function handleError(e) {
-  console.error(e.stack || e.messgae);
+  console.error(chalk.red(e.stack || e.message));
   process.exit(1);
 }
 
-function prettyPrintResults(results) {
-  return `changed:
+function prettyPrintResults(results, names) {
+  if (names) {
+    return Object.keys(results)
+      .reduce((acc, key) => {
+        acc = acc.concat(results[key]);
+        return acc;
+      }, [])
+      .join("\n");
+  }
+
+  return `
+${chalk.yellow("changed:")}
   ${results.changed.join("\n  ") || "[]"}
 
-uncommitted:
+${chalk.yellow("uncommitted:")}
   ${results.uncommitted.join("\n  ") || "[]"}
 
-untracked:
+${chalk.yellow("untracked:")}
   ${results.untracked.join("\n  ") || "[]"}
 `;
 }
 
-function prettyPrintResultsSubset(name, subset) {
-  return `${name}:
-  ${subset.join("\n  ") || "[]"}`;
+function prettyPrintResultsSubset(name, subset, names) {
+  if (names) {
+    return subset.join("\n");
+  }
+
+  return `
+${chalk.yellow(name)}:
+  ${subset.join("\n  ") || "[]"}
+`;
 }
 
 function printTime(time) {
   const NS_PER_SEC = 1e9;
   const ms = (time[0] * NS_PER_SEC + time[1]) / 1e6;
-  return `
-⏱  Done in ${ms}ms`;
+  return chalk.green(`⏱  Done in ${ms}ms`);
 }
 
 const startTime = process.hrtime();
-const isJson = argv.indexOf("--json") > -1;
-const only = (argv.find(arg => arg.startsWith("--only")) || "").split("=")[1];
-const mainBranch = (argv.find(arg => arg.startsWith("--branch")) || "").split(
-  "="
-)[1];
 
-getChanged({ mainBranch })
+const cli = meow(
+  `
+    ${chalk.green("Usage")}
+      $ get-changed
+
+    ${chalk.green("Options")}
+      ${chalk.yellow("--branch, -b")}     Specify main branch [default: master].
+      ${chalk.yellow(
+        "--only, -o"
+      )}       Specify subset of results to be printed e.g. – changed | uncommitted | untracked.
+      ${chalk.yellow(
+        "--names"
+      )}          Output file names only without any formatting. Can't be used with --json.
+      ${chalk.yellow(
+        "--json"
+      )}           Output result as json. Can't be used with --names-only.
+
+    ${chalk.green("Examples")}
+      $ get-changed --only=changed
+      $ get-changed --json --only=changed
+      $ get-changed --names-only
+`,
+  {
+    autoHelp: true,
+    flags: {
+      branch: {
+        type: "string",
+        alias: "b"
+      },
+      only: {
+        type: "string",
+        alias: "o"
+      },
+      names: {
+        type: "boolean"
+      },
+      json: {
+        type: "boolean"
+      }
+    }
+  }
+);
+
+const { branch, only, names, json } = cli.flags;
+
+if (json && names) {
+  console.error(chalk.red("Flags --json and --names can't be used together!"));
+  process.exit(1);
+}
+
+getChanged({ mainBranch: branch })
   .then(results => {
-    if (!isJson && !only) {
-      console.log(prettyPrintResults(results));
-    } else if (isJson && !only) {
+    if (!json && !only) {
+      console.log(prettyPrintResults(results, names));
+    } else if (json && !only) {
       console.log(JSON.stringify(results, null, 2));
     } else {
       const subset = results[only];
@@ -53,14 +115,14 @@ getChanged({ mainBranch })
         throw new Error(`Subset "${only}" doesn't exist!"`);
       }
 
-      if (isJson) {
+      if (json) {
         console.log(JSON.stringify(subset, null, 2));
       } else {
-        console.log(prettyPrintResultsSubset(only, subset));
+        console.log(prettyPrintResultsSubset(only, subset, names));
       }
     }
 
-    if (!isJson) {
+    if (!json && !names) {
       console.log(printTime(process.hrtime(startTime)));
     }
   })
