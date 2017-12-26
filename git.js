@@ -57,6 +57,7 @@ async function getChangedFiles(
   if (merge) {
     // If diff point type is a merge commit – get all changed files in that merge commit
     changed = changed.concat(await getChangedFromMerge({ merge }));
+    changed = changed.concat(await getCachedChangedSince({ commit: merge }));
   } else if (commit) {
     // Default strategy is to just diff against some point in the past
     changed = changed.concat(await getCachedChangedSince({ commit }));
