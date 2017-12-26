@@ -4,7 +4,7 @@
   "description": "Get a list of changed files",
   "main": "index.js",
   "bin": {
-    "get-chaned": "./cli.js"
+    "get-changed": "./cli.js"
   },
   "engines": {
     "node": ">=8"
