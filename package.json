@@ -1,6 +1,6 @@
 {
   "name": "get-changed-files",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Get a list of changed files",
   "main": "index.js",
   "bin": {
