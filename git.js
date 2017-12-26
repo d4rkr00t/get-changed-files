@@ -2,12 +2,22 @@
 
 const exec = require("./exec");
 
+/*::
+
+export type GetDiffPointParams = {
+  mainBranch: string,
+  currentBranch: string,
+  getDiffPoint?: GetDiffPoint
+};
+
+export type DiffPoint = { merge?: string, commit?: string };
+
+export type GetDiffPoint = (params: GetDiffPointParams) => DiffPoint;
+ */
+
 async function getDiffPoint(
-  {
-    mainBranch,
-    currentBranch
-  } /*: { mainBranch: string, currentBranch: string } */
-) {
+  { mainBranch, currentBranch } /*: GetDiffPointParams*/
+) /*: DiffPoint */ {
   if (mainBranch !== currentBranch) return { commit: mainBranch };
   const lastMerge = await exec('git log --pretty=format:"%H" --merges -n 1');
   // For main branch a diff point is either lastMerge commit or main branch itself
@@ -18,7 +28,7 @@ async function getCurrentBranch() {
   return exec("git rev-parse --abbrev-ref HEAD");
 }
 
-async function getChangedFromMerge({ merge } /*: { merge: string }*/) {
+async function getChangedFromMerge({ merge } /*: { merge: string } */) {
   return (await exec(`git log ${merge}^..${merge} --name-only --format=""`))
     .split("\n")
     .filter(file => !!file);
@@ -48,9 +58,7 @@ async function getUntrackedChanged() {
     .filter(file => !!file);
 }
 
-async function getChangedFiles(
-  { diffPoint } /*: { diffPoint : { merge?: string, commit?: string } }*/
-) {
+async function getChangedFiles({ diffPoint } /*: { diffPoint: DiffPoint }*/) {
   const { merge, commit } = diffPoint;
   let changed = [];
 
